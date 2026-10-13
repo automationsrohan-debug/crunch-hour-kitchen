@@ -10,7 +10,7 @@ export type CartLine = {
   addons: { id: string; name: string; price: number }[];
   unit_price: number; // display estimate only — server recalculates
   quantity: number;
-  notes?: string;
+  notes?: string | undefined;
 };
 
 type CartCtx = {
