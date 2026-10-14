@@ -27,7 +27,7 @@ type Status = "new" | "accepted" | "preparing" | "ready" | "out_for_delivery" | 
 const FLOW: Status[] = ["new", "accepted", "preparing", "ready", "out_for_delivery", "completed"];
 
 function useSession() {
-  const [state, setState] = useState<{ loading: boolean; userId: string | null; email?: string }>({ loading: true, userId: null });
+  const [state, setState] = useState<{ loading: boolean; userId: string | null; email?: string | undefined }>({ loading: true, userId: null });
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setState({ loading: false, userId: data.user?.id ?? null, email: data.user?.email }));
     const { data } = supabase.auth.onAuthStateChange((_e, s) => setState({ loading: false, userId: s?.user.id ?? null, email: s?.user.email }));
@@ -105,7 +105,7 @@ function Login() {
   );
 }
 
-function Dashboard({ email, isManager }: { email?: string; isManager: boolean }) {
+function Dashboard({ email, isManager }: { email?: string | undefined; isManager: boolean }) {
   const [tab, setTab] = useState<"orders" | "menu">("orders");
   return (
     <div className="min-h-screen bg-muted/30">
