@@ -254,7 +254,7 @@ function MenuEditor() {
   const refresh = () => { qc.invalidateQueries({ queryKey: ["admin-products"] }); qc.invalidateQueries({ queryKey: ["products"] }); };
 
   async function upd(table: "products" | "product_variations", id: string, patch: Record<string, unknown>) {
-    const { error } = await supabase.from(table).update(patch).eq("id", id);
+    const { error } = await supabase.from(table).update(patch as never).eq("id", id);
     if (error) return toast.error(errorMessage(error));
     toast.success("Saved"); refresh();
   }
@@ -292,7 +292,7 @@ function MenuEditor() {
 function PriceField({ label, value, onSave }: { label: string; value: number; onSave: (v: number) => void }) {
   const [v, setV] = useState(String(value));
   return (
-    <form className="flex items-center gap-1 text-sm" onSubmit={(e) => { e.preventDefault(); const n = Number(v); if (!(n >= 0) || n > 100000) return toast.error("Invalid price"); onSave(n); }}>
+    <form className="flex items-center gap-1 text-sm" onSubmit={(e) => { e.preventDefault(); const n = Number(v); if (!(n >= 0) || n > 100000) { toast.error("Invalid price"); return; } onSave(n); }}>
       <span className="font-semibold">{label}: Rs.</span>
       <Input value={v} onChange={(e) => setV(e.target.value)} inputMode="numeric" className="h-8 w-24" />
       {Number(v) !== value && <Button size="sm" variant="maroon">Save</Button>}

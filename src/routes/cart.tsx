@@ -52,7 +52,7 @@ function CartPage() {
       },
     });
     setBusy(false);
-    if (error) return toast.error(errorMessage(error));
+    if (error) { toast.error(errorMessage(error)); return; }
     const r = data as { order_number: string };
     cart.clear();
     nav({ to: "/track", search: { order: r.order_number, phone: p } });
