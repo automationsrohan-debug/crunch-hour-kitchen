@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Menu, ShoppingBag, X } from "lucide-react";
 import { useState } from "react";
-import logoLight from "@/assets/logo-light.svg.asset.json";
 import { useCart } from "@/lib/cart";
 import { Button } from "@/components/ui/button";
 
@@ -21,7 +20,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 bg-maroon-deep/95 text-cream backdrop-blur no-print">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:h-20">
         <Link to="/" className="flex items-center" aria-label="KRUNCH HOUR home">
-          <img src={logoLight.url} alt="KRUNCH HOUR" className="h-14 w-14 scale-150 object-contain md:h-20 md:w-20" />
+          <img src="/krunch-logo.png" alt="KRUNCH HOUR" className="h-[4.2rem] w-[4.2rem] scale-150 object-contain md:h-24 md:w-24" />
         </Link>
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
           {NAV.map((n) => (

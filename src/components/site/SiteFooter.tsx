@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import logoLight from "@/assets/logo-light.svg.asset.json";
 import { settingsQuery } from "@/lib/menu";
 
 export function SiteFooter() {
@@ -9,7 +8,7 @@ export function SiteFooter() {
     <footer className="bg-maroon-deep text-cream no-print">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-4">
         <div>
-          <img src={logoLight.url} alt="KRUNCH HOUR" className="h-32 w-32 object-contain" />
+          <img src="/krunch-logo.png" alt="KRUNCH HOUR" className="h-[9.6rem] w-[9.6rem] object-contain" />
           <p className="mt-2 text-sm text-cream/70">Crunch you can hear. Flavour you remember.</p>
         </div>
         <div>
