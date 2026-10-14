@@ -39,9 +39,9 @@ function CartPage() {
 
   async function place() {
     const p = normalizePkPhone(phone);
-    if (name.trim().length < 2) return toast.error("Please enter your name");
-    if (!p) return toast.error("Enter a valid Pakistani mobile number (03XX XXXXXXX)");
-    if (type === "delivery" && addr.trim().length < 8) return toast.error("Please enter a complete address");
+    if (name.trim().length < 2) { toast.error("Please enter your name"); return; }
+    if (!p) { toast.error("Enter a valid Pakistani mobile number (03XX XXXXXXX)"); return; }
+    if (type === "delivery" && addr.trim().length < 8) { toast.error("Please enter a complete address"); return; }
     setBusy(true);
     const { data, error } = await supabase.rpc("place_order", {
       payload: {

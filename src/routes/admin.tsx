@@ -60,7 +60,7 @@ function Admin() {
         <div className="mt-4 flex justify-center gap-2">
           <Button variant="maroon" onClick={async () => {
             const { data, error } = await supabase.rpc("claim_first_admin");
-            if (error || !data) return toast.error("An admin already exists.");
+            if (error || !data) { toast.error("An admin already exists."); return; }
             toast.success("You are now admin"); qc.invalidateQueries({ queryKey: ["my-roles"] });
           }}>Claim admin (first user only)</Button>
           <Button variant="outline" onClick={() => supabase.auth.signOut()}>Sign out</Button>
@@ -86,7 +86,7 @@ function Login() {
       ? await supabase.auth.signInWithPassword({ email, password: pw })
       : await supabase.auth.signUp({ email, password: pw, options: { emailRedirectTo: `${window.location.origin}/admin` } });
     setBusy(false);
-    if (res.error) return toast.error(res.error.message);
+    if (res.error) { toast.error(res.error.message); return; }
     if (mode === "up" && !res.data.session) toast.success("Check your email to confirm, then sign in.");
   }
   return (
@@ -160,7 +160,7 @@ function Orders() {
 
   async function setStatus(id: string, status: Status) {
     const { error } = await supabase.from("orders").update({ status }).eq("id", id);
-    if (error) return toast.error(errorMessage(error));
+    if (error) { toast.error(errorMessage(error)); return; }
     qc.invalidateQueries({ queryKey: ["admin-orders"] });
   }
   async function setRider(id: string, rider_name: string) {
@@ -185,7 +185,7 @@ function Orders() {
       </div>
       <div className="flex gap-2">
         {(["active", "completed", "cancelled"] as const).map((f) => (
-          <Button key={f} size="sm" variant={filter === f ? "maroon" : "outline"} onClick={() => setFilter(f)}>{f[0].toUpperCase() + f.slice(1)}</Button>
+          <Button key={f} size="sm" variant={filter === f ? "maroon" : "outline"} onClick={() => setFilter(f)}>{f.charAt(0).toUpperCase() + f.slice(1)}</Button>
         ))}
       </div>
       {list.length === 0 && <p className="text-muted-foreground">No orders here.</p>}
@@ -255,7 +255,7 @@ function MenuEditor() {
 
   async function upd(table: "products" | "product_variations", id: string, patch: Record<string, unknown>) {
     const { error } = await supabase.from(table).update(patch as never).eq("id", id);
-    if (error) return toast.error(errorMessage(error));
+    if (error) { toast.error(errorMessage(error)); return; }
     toast.success("Saved"); refresh();
   }
 
