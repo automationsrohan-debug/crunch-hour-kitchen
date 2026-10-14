@@ -105,11 +105,9 @@ function CartPage() {
           </div>
         </div>
         <aside className="h-fit space-y-3 rounded-3xl border bg-card p-6">
-          <div className="flex gap-2"><Input placeholder="Discount code" value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} /><Button variant="outline" onClick={applyCode} disabled={!code}>Apply</Button></div>
           <Row k="Subtotal" v={formatPKR(cart.subtotal)} />
-          {discount > 0 && <Row k="Discount" v={`- ${formatPKR(discount)}`} />}
           <Row k="Delivery" v={formatPKR(fee)} />
-          <div className="border-t pt-3"><Row k="Total (estimate)" v={formatPKR(cart.subtotal - discount + fee)} bold /></div>
+          <div className="border-t pt-3"><Row k="Total (estimate)" v={formatPKR(cart.subtotal + fee)} bold /></div>
           <p className="text-xs text-muted-foreground">Payment: {type === "delivery" ? "Cash on Delivery" : "Cash on Pickup"}. Final total is confirmed by the restaurant system.</p>
           <Button variant="gold" size="lg" className="w-full" disabled={busy} onClick={place}>{busy ? "Placing…" : "Place order"}</Button>
         </aside>
