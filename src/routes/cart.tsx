@@ -33,16 +33,9 @@ function CartPage() {
   const [phone, setPhone] = useState("");
   const [addr, setAddr] = useState("");
   const [instr, setInstr] = useState("");
-  const [code, setCode] = useState("");
-  const [discount, setDiscount] = useState(0);
   const [busy, setBusy] = useState(false);
 
-  const fee = type === "delivery" && s ? (s.free_delivery_over && cart.subtotal - discount >= s.free_delivery_over ? 0 : Number(s.delivery_fee)) : 0;
-
-  async function applyCode() {
-    const { data, error } = await supabase.rpc("check_coupon", { _code: code, _subtotal: cart.subtotal });
-    if (error) { setDiscount(0); toast.error(error.message); } else { setDiscount(Number(data)); toast.success("Code applied"); }
-  }
+  const fee = type === "delivery" && s ? (s.free_delivery_over && cart.subtotal >= s.free_delivery_over ? 0 : Number(s.delivery_fee)) : 0;
 
   async function place() {
     const p = normalizePkPhone(phone);
@@ -54,7 +47,7 @@ function CartPage() {
       payload: {
         order_type: type, customer_name: name, customer_phone: p,
         delivery_address: type === "delivery" ? addr : null, instructions: instr,
-        coupon_code: discount > 0 ? code : null,
+        coupon_code: null,
         items: cart.lines.map((l) => ({ product_id: l.product_id, variation_id: l.variation_id, addon_ids: l.addons.map((a) => a.id), quantity: l.quantity, notes: l.notes ?? null })),
       },
     });
