@@ -76,18 +76,6 @@ function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="grid gap-6 overflow-hidden rounded-3xl bg-maroon-grad p-8 text-cream md:grid-cols-2 md:p-12">
-          <div>
-            <span className="text-sm font-bold uppercase tracking-widest text-gold">Special deal</span>
-            <h2 className="mt-2 text-3xl md:text-5xl">10% off orders over Rs. 1,000</h2>
-            <p className="mt-3 text-cream/80">Use code <b className="text-gold">KRUNCH10</b> at checkout. <span className="text-xs">(Demo offer — editable by admin.)</span></p>
-          </div>
-          <div className="flex items-center md:justify-end">
-            <Button asChild variant="gold" size="xl"><Link to="/deals">View all deals</Link></Button>
-          </div>
-        </div>
-      </section>
 
       <section className="mx-auto grid max-w-7xl gap-5 px-4 pb-20 md:grid-cols-3">
         <InfoCard icon={<Bike />} title="Home delivery">

@@ -33,33 +33,26 @@ function CartPage() {
   const [phone, setPhone] = useState("");
   const [addr, setAddr] = useState("");
   const [instr, setInstr] = useState("");
-  const [code, setCode] = useState("");
-  const [discount, setDiscount] = useState(0);
   const [busy, setBusy] = useState(false);
 
-  const fee = type === "delivery" && s ? (s.free_delivery_over && cart.subtotal - discount >= s.free_delivery_over ? 0 : Number(s.delivery_fee)) : 0;
-
-  async function applyCode() {
-    const { data, error } = await supabase.rpc("check_coupon", { _code: code, _subtotal: cart.subtotal });
-    if (error) { setDiscount(0); toast.error(error.message); } else { setDiscount(Number(data)); toast.success("Code applied"); }
-  }
+  const fee = type === "delivery" && s ? (s.free_delivery_over && cart.subtotal >= s.free_delivery_over ? 0 : Number(s.delivery_fee)) : 0;
 
   async function place() {
     const p = normalizePkPhone(phone);
-    if (name.trim().length < 2) return toast.error("Please enter your name");
-    if (!p) return toast.error("Enter a valid Pakistani mobile number (03XX XXXXXXX)");
-    if (type === "delivery" && addr.trim().length < 8) return toast.error("Please enter a complete address");
+    if (name.trim().length < 2) { toast.error("Please enter your name"); return; }
+    if (!p) { toast.error("Enter a valid Pakistani mobile number (03XX XXXXXXX)"); return; }
+    if (type === "delivery" && addr.trim().length < 8) { toast.error("Please enter a complete address"); return; }
     setBusy(true);
     const { data, error } = await supabase.rpc("place_order", {
       payload: {
         order_type: type, customer_name: name, customer_phone: p,
         delivery_address: type === "delivery" ? addr : null, instructions: instr,
-        coupon_code: discount > 0 ? code : null,
+        coupon_code: null,
         items: cart.lines.map((l) => ({ product_id: l.product_id, variation_id: l.variation_id, addon_ids: l.addons.map((a) => a.id), quantity: l.quantity, notes: l.notes ?? null })),
       },
     });
     setBusy(false);
-    if (error) return toast.error(errorMessage(error));
+    if (error) { toast.error(errorMessage(error)); return; }
     const r = data as { order_number: string };
     cart.clear();
     nav({ to: "/track", search: { order: r.order_number, phone: p } });
@@ -105,11 +98,9 @@ function CartPage() {
           </div>
         </div>
         <aside className="h-fit space-y-3 rounded-3xl border bg-card p-6">
-          <div className="flex gap-2"><Input placeholder="Discount code" value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} /><Button variant="outline" onClick={applyCode} disabled={!code}>Apply</Button></div>
           <Row k="Subtotal" v={formatPKR(cart.subtotal)} />
-          {discount > 0 && <Row k="Discount" v={`- ${formatPKR(discount)}`} />}
           <Row k="Delivery" v={formatPKR(fee)} />
-          <div className="border-t pt-3"><Row k="Total (estimate)" v={formatPKR(cart.subtotal - discount + fee)} bold /></div>
+          <div className="border-t pt-3"><Row k="Total (estimate)" v={formatPKR(cart.subtotal + fee)} bold /></div>
           <p className="text-xs text-muted-foreground">Payment: {type === "delivery" ? "Cash on Delivery" : "Cash on Pickup"}. Final total is confirmed by the restaurant system.</p>
           <Button variant="gold" size="lg" className="w-full" disabled={busy} onClick={place}>{busy ? "Placing…" : "Place order"}</Button>
         </aside>
